@@ -3,11 +3,14 @@
 import { useState, useCallback, useEffect } from "react";
 import TarotCard from "@/components/TarotCard";
 import ReadingPanel from "@/components/ReadingPanel";
+import AiReading from "@/components/AiReading";
 import SpreadSelector from "@/components/SpreadSelector";
 import { drawCards, SpreadType, generateSummary, saveReading } from "@/lib/tarot";
 import { DrawnCard } from "@/lib/tarot-data";
 
 type Phase = "home" | "ritual" | "reveal" | "result";
+
+const API_KEY_STORAGE = "tarot-openai-key";
 
 export default function HomePage() {
   const [phase, setPhase] = useState<Phase>("home");
@@ -17,6 +20,22 @@ export default function HomePage() {
   const [flippedIndexes, setFlippedIndexes] = useState<Set<number>>(new Set());
   const [showReading, setShowReading] = useState(false);
   const [summary, setSummary] = useState("");
+  const [apiKey, setApiKey] = useState("");
+  const [showApiInput, setShowApiInput] = useState(false);
+
+  // Load saved API key on mount
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem(API_KEY_STORAGE);
+      if (saved) setApiKey(saved);
+    } catch {}
+  }, []);
+
+  // Save API key when changed
+  const handleApiKeyChange = useCallback((value: string) => {
+    setApiKey(value);
+    try { localStorage.setItem(API_KEY_STORAGE, value); } catch {}
+  }, []);
 
   const startRitual = useCallback(() => {
     const drawn = drawCards(spread);
@@ -26,7 +45,6 @@ export default function HomePage() {
     setSummary("");
     setPhase("ritual");
 
-    // Ritual sequence: show card backs, then transition to reveal
     setTimeout(() => {
       setPhase("reveal");
     }, 2400);
@@ -40,7 +58,6 @@ export default function HomePage() {
     });
   }, []);
 
-  // When all cards are flipped, show reading after delay
   useEffect(() => {
     if (phase === "reveal" && flippedIndexes.size === cards.length && cards.length > 0) {
       const s = generateSummary(cards, question);
@@ -115,6 +132,40 @@ export default function HomePage() {
 
           <SpreadSelector spread={spread} setSpread={setSpread} />
 
+          {/* API Key section */}
+          <section className="apikey-section">
+            <button
+              className="apikey-toggle"
+              onClick={() => setShowApiInput(!showApiInput)}
+            >
+              <span className="apikey-icon">{apiKey ? "✦" : "○"}</span>
+              <span>{apiKey ? "AI 解讀已啟用" : "設定 AI 解讀（選填）"}</span>
+            </button>
+
+            {showApiInput && (
+              <div className="apikey-panel fade-in">
+                <p className="apikey-desc">
+                  輸入你的 OpenAI API Key 以啟用 AI 個人化深度解讀。Key 僅存於你的瀏覽器中。
+                </p>
+                <input
+                  type="password"
+                  className="apikey-input"
+                  placeholder="sk-..."
+                  value={apiKey}
+                  onChange={e => handleApiKeyChange(e.target.value)}
+                />
+                {apiKey && (
+                  <button
+                    className="apikey-clear"
+                    onClick={() => handleApiKeyChange("")}
+                  >
+                    清除 Key
+                  </button>
+                )}
+              </div>
+            )}
+          </section>
+
           <section className="cta-section">
             <button className="cta-button" onClick={startRitual}>
               <span className="cta-glow" />
@@ -149,7 +200,7 @@ export default function HomePage() {
         </div>
       )}
 
-      {/* ── PHASE: REVEAL (flip cards) ────────── */}
+      {/* ── PHASE: REVEAL / RESULT ───────────── */}
       {(phase === "reveal" || phase === "result") && (
         <div className="phase-container fade-in">
           {question && (
@@ -200,9 +251,19 @@ export default function HomePage() {
             </section>
           )}
 
-          {/* Deep reading */}
+          {/* Deep reading (static) */}
           {phase === "result" && showReading && (
             <ReadingPanel cards={cards} />
+          )}
+
+          {/* AI Reading */}
+          {phase === "result" && showReading && (
+            <AiReading
+              cards={cards}
+              question={question}
+              spread={spread}
+              apiKey={apiKey}
+            />
           )}
 
           {/* Action buttons */}
