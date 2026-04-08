@@ -1,33 +1,31 @@
-import { SpreadType } from "@/lib/tarot";
+import { SpreadType, SPREAD_NAMES } from "@/lib/tarot";
 
 type Props = {
   spread: SpreadType;
-  setSpread: (spread: SpreadType) => void;
-  onDraw: () => void;
-  hasDrawn: boolean;
+  setSpread: (s: SpreadType) => void;
 };
 
-export default function SpreadSelector({ spread, setSpread, onDraw, hasDrawn }: Props) {
-  return (
-    <section className="selector-panel">
-      <div className="selector-tabs">
-        <button
-          className={spread === "single" ? "active" : ""}
-          onClick={() => setSpread("single")}
-        >
-          單張指引
-        </button>
-        <button
-          className={spread === "three" ? "active" : ""}
-          onClick={() => setSpread("three")}
-        >
-          三張牌陣
-        </button>
-      </div>
+const spreads: { key: SpreadType; desc: string }[] = [
+  { key: "single", desc: "一張牌，一個方向" },
+  { key: "three", desc: "過去・現在・未來" }
+];
 
-      <button className="draw-button" onClick={onDraw}>
-        {hasDrawn ? "重新抽牌" : "抽牌"}
-      </button>
+export default function SpreadSelector({ spread, setSpread }: Props) {
+  return (
+    <section className="spread-section">
+      <p className="spread-label">選擇牌陣</p>
+      <div className="spread-options">
+        {spreads.map(s => (
+          <button
+            key={s.key}
+            className={`spread-option ${spread === s.key ? "active" : ""}`}
+            onClick={() => setSpread(s.key)}
+          >
+            <span className="spread-name">{SPREAD_NAMES[s.key]}</span>
+            <span className="spread-desc">{s.desc}</span>
+          </button>
+        ))}
+      </div>
     </section>
   );
 }

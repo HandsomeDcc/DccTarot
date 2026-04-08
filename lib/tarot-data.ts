@@ -11,9 +11,8 @@ export type TarotCardData = {
   love: string;
   career: string;
   advice: string;
-  color: string;
-  accent: string;
   symbol: string;
+  coreSummary: string;
 };
 
 export type DrawnCard = TarotCardData & {
@@ -21,335 +20,255 @@ export type DrawnCard = TarotCardData & {
   position?: string;
 };
 
+export type ReadingRecord = {
+  id: string;
+  question: string;
+  spread: "single" | "three";
+  cards: { name: string; isReversed: boolean; position?: string }[];
+  timestamp: number;
+};
+
 export const MAJOR_ARCANA: TarotCardData[] = [
   {
-    id: 0,
-    name: "愚者",
-    en: "The Fool",
-    element: "air",
+    id: 0, name: "愚者", en: "The Fool", element: "air",
     upright: "新開始、冒險、自由、潛能、信任直覺",
     reversed: "魯莽、冒失、逃避責任、缺乏方向、準備不足",
     desc: "愚者象徵旅程的起點。真正的勇敢不是毫無恐懼，而是在未知面前仍願意往前走。",
     love: "感情上代表新的情感體驗、心動或願意重新打開自己。逆位則提醒別過度理想化對方。",
     career: "工作上適合開始新計畫、轉職、嘗試新領域。逆位表示行動前還需要更完整準備。",
     advice: "可以出發，但不要空手跳崖。保留初心，也要帶上基本判斷力。",
-    color: "#F4D03F",
-    accent: "#E8C547",
-    symbol: "☀"
+    symbol: "☀",
+    coreSummary: "你正站在一段全新旅程的起點，帶著未知的勇氣與可能性。"
   },
   {
-    id: 1,
-    name: "魔術師",
-    en: "The Magician",
-    element: "fire",
+    id: 1, name: "魔術師", en: "The Magician", element: "fire",
     upright: "意志力、技巧、創造、行動力、資源整合",
     reversed: "操縱、欺瞞、能力失衡、空有想法、缺乏自信",
     desc: "魔術師象徵把想法落地的能力。你手上其實已有資源，關鍵在於是否整合並使用它。",
     love: "感情中代表主動吸引、溝通能力提升，也可能出現很有魅力的人。逆位要防話術與操控。",
     career: "適合提案、創業、談合作、做個人品牌。逆位代表執行力不足或能力沒有真正發揮。",
     advice: "少一點空想，多一點動手。你不是缺資源，而是要開始調度資源。",
-    color: "#E74C3C",
-    accent: "#C0392B",
-    symbol: "∞"
+    symbol: "∞",
+    coreSummary: "你手上已有所需的一切，現在需要的是意志力與行動。"
   },
   {
-    id: 2,
-    name: "女祭司",
-    en: "The High Priestess",
-    element: "water",
+    id: 2, name: "女祭司", en: "The High Priestess", element: "water",
     upright: "直覺、潛意識、神秘知識、內在智慧、靜觀",
     reversed: "忽略直覺、隱藏真相、封閉內心、表面化、缺乏深度",
     desc: "女祭司提醒你，真正的答案不一定在外面，而在你尚未安靜傾聽的內在。",
     love: "感情中有未說出口的心意，也代表曖昧、內心拉扯與直覺很強。逆位可能是隱瞞或看不清。",
     career: "工作上適合研究、策劃、觀察局勢，不宜過早表態。逆位提醒別忽視細節與暗流。",
     advice: "先別急著表現。先感受，再判斷。",
-    color: "#9B59B6",
-    accent: "#8E44AD",
-    symbol: "☽"
+    symbol: "☽",
+    coreSummary: "答案已在你內心深處，靜下來傾聽直覺的聲音。"
   },
   {
-    id: 3,
-    name: "女皇",
-    en: "The Empress",
-    element: "earth",
+    id: 3, name: "女皇", en: "The Empress", element: "earth",
     upright: "豐盛、母性、創造力、滋養、自然能量",
     reversed: "依賴、停滯、創造受阻、匱乏感、過度保護",
     desc: "女皇代表滋養與生長。好的創造不是硬擠出來，而是在被善待的環境中自然盛開。",
     love: "感情上是溫柔、照顧、吸引力與關係成長。逆位提醒別把付出變成窒息式控制。",
     career: "適合內容創作、美感工作、品牌經營與長期培養型專案。逆位代表產出卡住或精力不足。",
     advice: "照顧好你的身心，成果會跟著長出來。",
-    color: "#27AE60",
-    accent: "#229954",
-    symbol: "♀"
+    symbol: "♀",
+    coreSummary: "豐盛正在靠近，先滋養自己，創造自然會發生。"
   },
   {
-    id: 4,
-    name: "皇帝",
-    en: "The Emperor",
-    element: "fire",
+    id: 4, name: "皇帝", en: "The Emperor", element: "fire",
     upright: "權威、秩序、穩定、領導、結構",
     reversed: "控制欲過強、僵化、專斷、缺乏彈性、壓迫",
     desc: "皇帝象徵邊界與秩序。穩定不是冷酷，而是能撐起局面。",
     love: "關係中代表想要穩定、承諾與明確方向。逆位可能代表控制欲、固執或權力失衡。",
     career: "工作上有管理、決策、建制度的能量。逆位提醒不要把規則變成壓迫。",
     advice: "把生活架構起來，事情才站得住。",
-    color: "#E74C3C",
-    accent: "#A93226",
-    symbol: "♂"
+    symbol: "♂",
+    coreSummary: "現在需要的是秩序與結構，為你的世界建立穩固的框架。"
   },
   {
-    id: 5,
-    name: "教皇",
-    en: "The Hierophant",
-    element: "earth",
+    id: 5, name: "教皇", en: "The Hierophant", element: "earth",
     upright: "傳統、信仰、制度、師承、精神指引",
     reversed: "反叛傳統、打破規範、教條束縛、思想僵化、尋找個人道路",
     desc: "教皇關乎傳承與系統。它不是要你盲從，而是看見你正站在哪套信念裡。",
     love: "感情中可能指穩定關係、價值觀一致，或朝正式承諾前進。逆位則是關係觀念不合。",
     career: "適合進入成熟體系、尋找導師、學習專業。逆位表示不想再照舊規則走。",
     advice: "先理解規則，再決定要遵循還是突破。",
-    color: "#F39C12",
-    accent: "#D68910",
-    symbol: "⟐"
+    symbol: "⟐",
+    coreSummary: "在傳承與突破之間，找到屬於你自己的信念之路。"
   },
   {
-    id: 6,
-    name: "戀人",
-    en: "The Lovers",
-    element: "air",
+    id: 6, name: "戀人", en: "The Lovers", element: "air",
     upright: "關係連結、價值對齊、選擇、承諾、和諧",
     reversed: "關係失衡、價值衝突、猶豫不決、錯誤選擇、分離感",
     desc: "戀人不只講愛情，更講你如何做出與內心一致的選擇。",
     love: "強烈的吸引、深度關係、價值觀契合。逆位則是拉扯、分離感或關係內不對等。",
     career: "工作上代表合作、選擇方向、與價值相符的工作。逆位可能是選錯隊友或方向。",
     advice: "選擇那條讓你更完整的路，不是讓你更討好的路。",
-    color: "#E91E63",
-    accent: "#C2185B",
-    symbol: "♡"
+    symbol: "♡",
+    coreSummary: "一個重要的選擇正在面前，聽從你內心真正的聲音。"
   },
   {
-    id: 7,
-    name: "戰車",
-    en: "The Chariot",
-    element: "water",
+    id: 7, name: "戰車", en: "The Chariot", element: "water",
     upright: "意志、勝利、掌控、決心、推進",
     reversed: "失控、衝動、方向混亂、內外拉扯、強硬對抗",
     desc: "戰車代表將分裂的力量整合起來，朝同一個方向前進。",
     love: "感情中可能出現強烈推進、主動追求，也可能是想掌控關係節奏。逆位是拉扯與爭執。",
     career: "事業上非常適合衝刺、競爭、拿結果。逆位提醒不要只顧贏而失去方向。",
     advice: "不是更用力就行，而是要先對準方向。",
-    color: "#2E86C1",
-    accent: "#1A5276",
-    symbol: "⚔"
+    symbol: "⚔",
+    coreSummary: "整合你的力量，對準方向，全力推進。"
   },
   {
-    id: 8,
-    name: "力量",
-    en: "Strength",
-    element: "fire",
+    id: 8, name: "力量", en: "Strength", element: "fire",
     upright: "內在力量、勇氣、耐心、溫柔、自我掌握",
     reversed: "自我懷疑、脆弱、情緒失衡、恐懼、內在衝突",
     desc: "力量不是壓制本能，而是溫柔地駕馭本能。",
     love: "感情中代表包容、穩定與柔軟而堅定的愛。逆位可能是不安、敏感或自信不足。",
     career: "適合長期累積、穩定輸出、承壓。逆位提醒別被壓力磨光自信。",
     advice: "你不需要變兇，才叫強。",
-    color: "#F39C12",
-    accent: "#E67E22",
-    symbol: "∞"
+    symbol: "∞",
+    coreSummary: "真正的力量來自溫柔與耐心，而非壓制與控制。"
   },
   {
-    id: 9,
-    name: "隱者",
-    en: "The Hermit",
-    element: "earth",
+    id: 9, name: "隱者", en: "The Hermit", element: "earth",
     upright: "內省、獨處、智慧、尋求真理、引導",
     reversed: "孤立、逃避連結、封閉、固執、迷失方向",
     desc: "隱者提醒你暫時離開喧鬧，向內找答案。",
     love: "感情中可能需要距離、冷靜期或誠實面對內心。逆位是過度封閉、不願連結。",
     career: "適合研究、深耕、進修與思考下一步。逆位可能是悶太久而失去互動。",
     advice: "先靜下來，你才知道該往哪裡走。",
-    color: "#7F8C8D",
-    accent: "#626567",
-    symbol: "🕯"
+    symbol: "🕯",
+    coreSummary: "暫時退回內在，在寧靜中找到屬於你的答案。"
   },
   {
-    id: 10,
-    name: "命運之輪",
-    en: "Wheel of Fortune",
-    element: "fire",
+    id: 10, name: "命運之輪", en: "Wheel of Fortune", element: "fire",
     upright: "命運轉折、機遇、循環、變化、關鍵時機",
     reversed: "時機未到、外在阻力、失去節奏、抗拒變化、感到失控",
     desc: "命運之輪代表變化已經開始，問題不只是會不會變，而是你怎麼回應它。",
     love: "感情可能迎來轉折、重逢、時機到來。逆位則代表節奏不對、卡在循環裡。",
     career: "工作上有新機會、轉機或外部變數。逆位提醒不要逆勢硬拚。",
     advice: "順勢不是認命，而是知道何時推進、何時等待。",
-    color: "#8E44AD",
-    accent: "#6C3483",
-    symbol: "⊕"
+    symbol: "⊕",
+    coreSummary: "命運的齒輪正在轉動，順應變化而非抗拒它。"
   },
   {
-    id: 11,
-    name: "正義",
-    en: "Justice",
-    element: "air",
+    id: 11, name: "正義", en: "Justice", element: "air",
     upright: "公平、真相、責任、理性判斷、結果承擔",
     reversed: "偏見、不公、逃避責任、判斷失準、資訊失衡",
     desc: "正義要求你看清事實，而不是只看想看的部分。",
     love: "感情中代表講清楚、對等、誠實。逆位則代表不公平、隱瞞或責任不平衡。",
     career: "很適合談合約、制度、評估與決策。逆位提醒資訊不完整時不要急下判斷。",
     advice: "誠實面對現況，才有真正的選擇權。",
-    color: "#2E86C1",
-    accent: "#21618C",
-    symbol: "⚖"
+    symbol: "⚖",
+    coreSummary: "看清事實的全貌，公正地面對你的處境與選擇。"
   },
   {
-    id: 12,
-    name: "倒吊人",
-    en: "The Hanged Man",
-    element: "water",
+    id: 12, name: "倒吊人", en: "The Hanged Man", element: "water",
     upright: "暫停、轉換視角、等待、放下執念、頓悟",
     reversed: "拖延、卡住、無謂犧牲、抗拒改變、停滯不前",
     desc: "倒吊人不是失敗，而是主動停下來看見新角度。",
     love: "感情中代表暫停、觀察、重新理解彼此。逆位可能是拖著不決或自我耗損。",
     career: "工作上適合調整策略，不適合硬衝。逆位表示卡住卻不肯鬆手。",
     advice: "停一下不是退步，是為了看得更清楚。",
-    color: "#1ABC9C",
-    accent: "#17A589",
-    symbol: "⊗"
+    symbol: "⊗",
+    coreSummary: "現在不是行動的時候，換個角度看，答案就在那裡。"
   },
   {
-    id: 13,
-    name: "死神",
-    en: "Death",
-    element: "water",
+    id: 13, name: "死神", en: "Death", element: "water",
     upright: "結束、轉化、重生、蛻變、告別過去",
     reversed: "抗拒改變、停滯、無法放手、拖延結束、執著舊局",
     desc: "死神不是壞牌，它是結束舊循環、騰出新空間的必要力量。",
     love: "感情中可能是關係轉型、舊模式結束，甚至分開後重生。逆位是捨不得放。",
     career: "工作上可能離開舊環境、換方向或做大調整。逆位則是明知不適合卻繼續撐。",
     advice: "放掉已經死掉的東西，新的才進得來。",
-    color: "#2C3E50",
-    accent: "#1A252F",
-    symbol: "☠"
+    symbol: "☠",
+    coreSummary: "一個舊的篇章正在落幕，為新的蛻變騰出空間。"
   },
   {
-    id: 14,
-    name: "節制",
-    en: "Temperance",
-    element: "fire",
+    id: 14, name: "節制", en: "Temperance", element: "fire",
     upright: "平衡、耐心、整合、調和、節奏感",
     reversed: "失衡、過度、衝動、極端、難以協調",
     desc: "節制代表成熟地調配能量，不走極端，找到真正能長久的節奏。",
     love: "感情上是磨合、修復、慢慢走向平衡。逆位代表一方太多、一方太少。",
     career: "工作上適合整合資源、跨部門合作、慢慢修正。逆位是流程失衡或溝通斷裂。",
     advice: "不要只追求強烈，追求可持續。",
-    color: "#27AE60",
-    accent: "#1E8449",
-    symbol: "△"
+    symbol: "△",
+    coreSummary: "在極端之間找到平衡，以耐心調和一切。"
   },
   {
-    id: 15,
-    name: "惡魔",
-    en: "The Devil",
-    element: "earth",
+    id: 15, name: "惡魔", en: "The Devil", element: "earth",
     upright: "束縛、執著、物欲、陰影、恐懼",
     reversed: "看見束縛、開始解放、覺醒、鬆綁依附、重拾自由",
     desc: "惡魔提醒你，最難的不是被困住，而是不承認自己其實能離開。",
     love: "感情中可能是強烈吸引、依附、情緒控制或不健康關係。逆位是看見問題並想抽離。",
     career: "工作上可能被金錢、面子或焦慮綁住。逆位表示開始鬆綁。",
     advice: "先看見自己被什麼綁住，才能真正自由。",
-    color: "#922B21",
-    accent: "#641E16",
-    symbol: "⛧"
+    symbol: "⛧",
+    coreSummary: "看見那條隱形的鎖鏈，你其實隨時可以選擇離開。"
   },
   {
-    id: 16,
-    name: "高塔",
-    en: "The Tower",
-    element: "fire",
+    id: 16, name: "高塔", en: "The Tower", element: "fire",
     upright: "突變、崩解、真相揭露、覺醒、打破虛假",
     reversed: "延後崩塌、內部動盪、抗拒覺醒、勉強維持、逃避改變",
     desc: "高塔不是純粹毀滅，而是把建立在幻象上的東西直接打掉。",
     love: "感情中可能爆發衝突、真相揭露或關係劇烈改變。逆位表示問題早已存在，只是拖著。",
     career: "工作上有突發變動、制度崩裂、離職念頭或舊做法失效。逆位代表表面撐住、內裡震盪。",
     advice: "與其怕崩，不如趁崩了重建真的。",
-    color: "#E74C3C",
-    accent: "#922B21",
-    symbol: "⚡"
+    symbol: "⚡",
+    coreSummary: "舊的結構正在崩塌，這是重建真實的契機。"
   },
   {
-    id: 17,
-    name: "星星",
-    en: "The Star",
-    element: "air",
+    id: 17, name: "星星", en: "The Star", element: "air",
     upright: "希望、療癒、靈感、平靜、信任宇宙",
     reversed: "失去希望、懷疑、情緒低潮、信念動搖、能量枯竭",
     desc: "星星是在高塔之後出現的光，提醒你即使一切震過，仍能慢慢復原。",
     love: "感情中是療癒、真誠、重新相信愛。逆位是失望後不敢再相信。",
     career: "工作上代表創意回流、願景、重新找到方向。逆位是理想感流失。",
     advice: "先恢復自己，再去追答案。",
-    color: "#3498DB",
-    accent: "#2E86C1",
-    symbol: "★"
+    symbol: "★",
+    coreSummary: "在黑暗之後，希望的光芒正在照向你。"
   },
   {
-    id: 18,
-    name: "月亮",
-    en: "The Moon",
-    element: "water",
+    id: 18, name: "月亮", en: "The Moon", element: "water",
     upright: "幻象、潛意識、夢境、敏感、直覺",
     reversed: "迷霧散去、真相浮現、克服恐懼、情緒澄清、恢復清晰",
     desc: "月亮指向模糊、情緒與潛意識。不是所有看不清都等於危險，但需要慢一點。",
     love: "感情中可能有不安、曖昧、猜測與投射。逆位表示真相慢慢浮現。",
     career: "工作上提醒防資訊模糊、內耗與想太多。逆位則有機會理清混亂。",
     advice: "現在不是下斷言的時候，是感受與觀察的時候。",
-    color: "#5D6D7E",
-    accent: "#2E4057",
-    symbol: "☾"
+    symbol: "☾",
+    coreSummary: "事情尚在迷霧之中，保持覺察，不急於判斷。"
   },
   {
-    id: 19,
-    name: "太陽",
-    en: "The Sun",
-    element: "fire",
+    id: 19, name: "太陽", en: "The Sun", element: "fire",
     upright: "喜悅、活力、成功、清晰、樂觀",
     reversed: "暫時低迷、光芒受阻、過度自信、延遲的快樂、能量下降",
     desc: "太陽是清楚、熱情與生命力。它把事情照亮，也把你本來的光照回來。",
     love: "感情中有坦率、快樂、公開與正向發展。逆位可能是心情低迷或期待過高。",
     career: "工作上代表成果、曝光、自信與順利。逆位表示好事還在路上，但稍有延遲。",
     advice: "把自己放到光裡，不要再躲。",
-    color: "#F39C12",
-    accent: "#F1C40F",
-    symbol: "☀"
+    symbol: "☀",
+    coreSummary: "光明與喜悅正在靠近，讓自己被看見。"
   },
   {
-    id: 20,
-    name: "審判",
-    en: "Judgement",
-    element: "fire",
+    id: 20, name: "審判", en: "Judgement", element: "fire",
     upright: "覺醒、召喚、自我審視、重生、轉化",
     reversed: "自我懷疑、逃避覺醒、無法放下過去、錯失召喚、停在舊身分",
     desc: "審判不是被外界審判，而是你是否願意醒來，承認真正的自己要往哪裡去。",
     love: "感情中可能是舊關係回頭、重新審視、做出清楚決定。逆位是困在舊情緒裡。",
     career: "工作上代表使命感、方向更新、人生轉向。逆位則是明知該變卻拖延。",
     advice: "你已經聽見召喚了，別再假裝沒聽到。",
-    color: "#E74C3C",
-    accent: "#CB4335",
-    symbol: "📯"
+    symbol: "📯",
+    coreSummary: "內在的召喚已經響起，是時候回應它了。"
   },
   {
-    id: 21,
-    name: "世界",
-    en: "The World",
-    element: "earth",
+    id: 21, name: "世界", en: "The World", element: "earth",
     upright: "圓滿完成、整合、成就、完整、旅程終點",
     reversed: "未竟之事、缺乏收尾、循環未完成、延遲完成、卡在最後一步",
     desc: "世界象徵完成、整合與進入下一輪循環前的總結。",
     love: "感情中代表成熟穩定、走向完整，或一段關係的圓滿收尾。逆位則是差最後一步。",
     career: "工作上代表完成重要階段、交卷、升級與更大格局。逆位表示收尾還沒做好。",
     advice: "把這一段好好完成，你才走得進下一段。",
-    color: "#27AE60",
-    accent: "#1D8348",
-    symbol: "◉"
+    symbol: "◉",
+    coreSummary: "一段旅程正在圓滿完成，你已準備好進入下一個循環。"
   }
 ];
