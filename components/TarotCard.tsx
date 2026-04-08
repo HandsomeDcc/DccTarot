@@ -1,5 +1,6 @@
 import { DrawnCard, Element } from "@/lib/tarot-data";
 import { cardKeywords, cardTone } from "@/lib/tarot";
+import CardArt from "./CardArt";
 
 type Props = { card: DrawnCard };
 
@@ -12,9 +13,7 @@ export default function TarotCard({ card }: Props) {
 
   return (
     <article className={`tarot-card ${card.isReversed ? "reversed" : ""}`}>
-      {/* Outer gold frame */}
       <div className="card-outer-frame">
-        {/* Inner frame */}
         <div className="card-inner-frame">
           {/* Corner ornaments */}
           <span className="corner-ornament tl">✧</span>
@@ -28,15 +27,9 @@ export default function TarotCard({ card }: Props) {
             <span className="card-element">{elementLabel[card.element]}</span>
           </div>
 
-          {/* Symbol area */}
-          <div className={`card-symbol-area ${card.isReversed ? "symbol-reversed" : ""}`}>
-            <div className="symbol-ring" />
-            <div className="symbol-ring ring-2" />
-            <div className="card-sigil">{card.symbol}</div>
-            {/* Subtle geometric pattern */}
-            <div className="geo-line geo-1" />
-            <div className="geo-line geo-2" />
-            <div className="geo-line geo-3" />
+          {/* Renaissance illustration area */}
+          <div className={`card-art-area ${card.isReversed ? "art-reversed" : ""}`}>
+            <CardArt id={card.id} className="card-art-svg" />
           </div>
 
           {/* Text area */}
@@ -46,7 +39,6 @@ export default function TarotCard({ card }: Props) {
             <p className={`card-tone-badge ${card.isReversed ? "tone-reversed" : ""}`}>
               {tone}
             </p>
-            <p className="card-keywords">{cardKeywords(card)}</p>
           </div>
         </div>
       </div>
